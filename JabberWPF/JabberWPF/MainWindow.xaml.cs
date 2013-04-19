@@ -16,6 +16,7 @@ using muzzle;
 using System.Configuration;
 using jabber.protocol.client;
 using jabber.protocol.iq;
+using System.Windows.Threading;
 
 namespace JabberWPF
 {
@@ -42,13 +43,13 @@ namespace JabberWPF
 
             ApplyDefaultJabberConfiguration( jabberClient );
 
-            jabberClient.OnError += new bedrock.ExceptionHandler(jabberClient_OnError);
-            jabberClient.OnAuthenticate += new bedrock.ObjectHandler(jabberClient_OnAuthenticate);
-            jabberClient.OnAuthError += new jabber.protocol.ProtocolHandler(jabberClient_OnAuthError);
-            jabberClient.OnMessage += new MessageHandler(jabberClient_OnMessage);
+            jabberClient.OnError += jabberClient_OnError;
+            jabberClient.OnAuthenticate += jabberClient_OnAuthenticate;
+            jabberClient.OnAuthError += jabberClient_OnAuthError;
+            jabberClient.OnMessage += jabberClient_OnMessage;
 
-            rosterManager.OnRosterBegin += new bedrock.ObjectHandler(rosterManager_OnRosterBegin);
-            rosterManager.OnRosterItem += new RosterItemHandler(rosterManager_OnRosterItem);
+            rosterManager.OnRosterBegin += rosterManager_OnRosterBegin;
+            rosterManager.OnRosterItem += rosterManager_OnRosterItem;
 
             jabberClient.Connect();
         }
@@ -63,18 +64,18 @@ namespace JabberWPF
             messagesStackPanel.Children.Add(msgBox);
         }
 
-        void jabberClient_OnMessage(object sender, jabber.protocol.client.Message msg)
+        void jabberClient_OnMessage(object sender, Message msg)
         {
             if (!string.IsNullOrEmpty(msg.Body))
             {
                 string m = string.Format("{0} : {1}", msg.From, msg.Body);
-                messagesStackPanel.Dispatcher.Invoke((Action<string>)AddMsgToMsgList, m);
+                messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
             }
         }
 
         void rosterManager_OnRosterBegin(object sender)
         {
-            rosterStackPanel.Dispatcher.Invoke((Action)(() => { rosterStackPanel.Children.Clear(); }));
+            rosterStackPanel.Dispatcher.Invoke((Action)(() => rosterStackPanel.Children.Clear()));
         }
 
         void AddUserToRosterList(string user)
@@ -87,19 +88,17 @@ namespace JabberWPF
             rosterStackPanel.Children.Add(entry);
         }
 
-        void rosterManager_OnRosterItem(object sender, jabber.protocol.iq.Item ri)
+        void rosterManager_OnRosterItem(object sender, Item ri)
         {
             string user = string.Format("{0} ({1})", ri.Nickname, ri.JID);
 
-            rosterStackPanel.Dispatcher.Invoke((Action<string>)AddUserToRosterList, user);
+            rosterStackPanel.Dispatcher.Invoke((Action)(() => AddUserToRosterList(user)));
         }
 
         void jabberClient_OnAuthError(object sender, System.Xml.XmlElement rp)
         {
             string errorMsg = string.Format("Error:{0}", rp.InnerText);
-            Delegate errorStatus = (Action)(() => { statusLabel.Content = errorMsg; });
-
-            statusLabel.Dispatcher.Invoke(errorStatus);
+            statusLabel.Dispatcher.Invoke((Action)(() => { statusLabel.Content = errorMsg; }));
         }
 
         void jabberClient_OnAuthenticate(object sender)
@@ -187,7 +186,7 @@ namespace JabberWPF
             jabberClient.Write(msg);
 
             string m = string.Format("{0} : {1}", msg.To, msg.Body);
-            messagesStackPanel.Dispatcher.Invoke((Action<string>)AddMsgToMsgList, m);
+            messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
         }
     }
 }
