@@ -11,13 +11,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using jabber.client;
+using MahApps.Metro.Controls;
 
 namespace JabberWPF
 {
     /// <summary>
     /// Interaction logic for ConfigurationWindow.xaml
     /// </summary>
-    public partial class ConfigurationWindow : Window
+    public partial class ConfigurationWindow : MetroWindow
     {
         ClientConfig jabberConfig;
         JabberClient jabberClient;

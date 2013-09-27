@@ -17,13 +17,14 @@ using System.Configuration;
 using jabber.protocol.client;
 using jabber.protocol.iq;
 using System.Windows.Threading;
+using MahApps.Metro.Controls;
 
 namespace JabberWPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private JabberClient jabberClient;
         private RosterManager rosterManager;
@@ -58,7 +59,6 @@ namespace JabberWPF
         {
             TextBlock msgBox = new TextBlock();
             msgBox.Height = 32;
-            msgBox.Foreground = Brushes.White;
             msgBox.Text = message;
 
             messagesStackPanel.Children.Add(msgBox);
@@ -82,7 +82,6 @@ namespace JabberWPF
         {
             TextBlock entry = new TextBlock();
             entry.Height = 32;
-            entry.Foreground = Brushes.White;
             entry.Text = user;
 
             rosterStackPanel.Children.Add(entry);
