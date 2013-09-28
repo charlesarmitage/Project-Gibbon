@@ -12,14 +12,15 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
     <Grid VerticalAlignment="Center">
-        <Button Content="Configure" HorizontalAlignment="Left" Name="configureButton" VerticalAlignment="Top" Width="75" Click="configureButton_Click"/>
-        <TextBox Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" Name="sendMsgTextbox" VerticalAlignment="Top" Width="284" Foreground="White" KeyDown="sendMsgTextbox_KeyDown" />
-        <Button Content="Send" Height="58" HorizontalAlignment="Left" Margin="380,349,0,0" Name="sendButton" VerticalAlignment="Top" Width="63" FontSize="16" />
+        <Button Content="Configure" HorizontalAlignment="Left" Name="configureButton" VerticalAlignment="Top" Click="configureButton_Click" />
+        <TextBox Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" Name="sendMsgTextbox" VerticalAlignment="Top" Width="284" KeyDown="sendMsgTextbox_KeyDown" />
+        <Button Content="Send" HorizontalAlignment="Left" Margin="380,349,0,0" Name="sendButton" VerticalAlignment="Top" FontSize="16" />
         <Viewbox Height="46" HorizontalAlignment="Left" Margin="7,29,0,0" Name="viewbox1" VerticalAlignment="Top" Width="207">
             <Label Content="" Height="28" Name="statusLabel" />
         </Viewbox>
