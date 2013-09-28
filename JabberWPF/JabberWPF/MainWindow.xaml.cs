@@ -18,6 +18,8 @@ using jabber.protocol.client;
 using jabber.protocol.iq;
 using System.Windows.Threading;
 using MahApps.Metro.Controls;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace JabberWPF
 {
@@ -186,6 +188,115 @@ namespace JabberWPF
 
             string m = string.Format("{0} : {1}", msg.To, msg.Body);
             messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
+        }
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+    }
+
+    // ViewModel
+    public class ObserverableObject : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChangedEvent(string propertyName)
+        {
+            var callback = PropertyChanged;
+            if (callback != null)
+            {
+                callback(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    // ViewModel
+    public class ChatTransmitter : ICommand
+    {
+        Action<string> _action;
+
+        public ChatTransmitter(Action<string> action)
+        {
+            _action = action;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public void Execute(object parameter)
+        {
+            _action(string.Empty);
+        }
+    }
+
+    //Model
+    public class MessageList
+    {
+        public MessageList()
+        {
+            Messages = new List<string>();
+        }
+
+        public ICollection<string> Messages { get; private set; }
+
+        public void SendMessage(string message)
+        {
+            Messages.Add(message);
+        }
+    }
+
+    // Presenter ViewModel
+    public class Presenter : ObserverableObject
+    {
+        private MessageList messageList = new MessageList();
+        private ObservableCollection<string> _messages = new ObservableCollection<string>();
+        private string _messageToSend = string.Empty;
+
+        public Presenter()
+        {
+        }
+
+        public IEnumerable<string> Messages
+        {
+            get
+            {
+                return _messages;
+            }
+        }
+
+        public string MessageToSend
+        {
+            get
+            {
+                return _messageToSend;
+            }
+            set
+            {
+                _messageToSend = value;
+                RaisePropertyChangedEvent("MessageToSend");
+            }
+        }
+
+        public ICommand SendMessage
+        {
+            get
+            {
+                return new ChatTransmitter(Transmit);
+            }
+        }
+
+        private void Transmit(string message)
+        {
+            messageList.SendMessage(_messageToSend);
+            _messages.Add(_messageToSend);
+            RaisePropertyChangedEvent("Messages");
         }
     }
 }

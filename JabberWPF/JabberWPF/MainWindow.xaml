@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="Gibbon" Height="446" Width="525" ShowIconOnTitleBar="True">
+        xmlns:Jabber="clr-namespace:JabberWPF"
+        Title="Gibbon" Height="446" Width="525" ShowIconOnTitleBar="True" Loaded="MetroWindow_Loaded">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -17,20 +18,29 @@
         </ResourceDictionary>
     </Window.Resources>
 
+    <Window.DataContext>
+        <Jabber:Presenter/>
+    </Window.DataContext>
+
     <Grid VerticalAlignment="Center">
         <Button Content="Configure" HorizontalAlignment="Left" Name="configureButton" VerticalAlignment="Top" Click="configureButton_Click" />
-        <TextBox Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" Name="sendMsgTextbox" VerticalAlignment="Top" Width="284" KeyDown="sendMsgTextbox_KeyDown" />
-        <Button Content="Send" HorizontalAlignment="Left" Margin="380,349,0,0" Name="sendButton" VerticalAlignment="Top" FontSize="16" />
+        <ListBox ItemsSource="{Binding Messages}" Height="100" Margin="5"/>
+
+        <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}" Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" Name="sendMsgTextbox" VerticalAlignment="Top" Width="284" KeyDown="sendMsgTextbox_KeyDown" />
+        <Button Content="Send" Command="{Binding SendMessage}" HorizontalAlignment="Left" Margin="380,349,0,0" Name="sendButton" VerticalAlignment="Top" FontSize="16" />
         <Viewbox Height="46" HorizontalAlignment="Left" Margin="7,29,0,0" Name="viewbox1" VerticalAlignment="Top" Width="207">
             <Label Content="" Height="28" Name="statusLabel" />
         </Viewbox>
-        
+
+
         <ScrollViewer Height="262" HorizontalAlignment="Left" Margin="7,81,0,0" Name="rosterScrollViewer" VerticalAlignment="Top" Width="207">
             <StackPanel Name="rosterStackPanel" VerticalAlignment="Top" Width="189" CanVerticallyScroll="True"/>
         </ScrollViewer>
-        
+
         <ScrollViewer Height="336" HorizontalAlignment="Left" Margin="220,7,0,0" Name="msgScrollViewer" VerticalAlignment="Top" Width="271">
-        <StackPanel Name="messagesStackPanel" VerticalAlignment="Top" CanVerticallyScroll="True"></StackPanel>
+
+            <StackPanel Name="messagesStackPanel" VerticalAlignment="Top" CanVerticallyScroll="True"></StackPanel>
+        
         </ScrollViewer>
         
         <TextBox Height="26" HorizontalAlignment="Left" Margin="8,349,0,0" Name="toTextbox" VerticalAlignment="Top" Width="76" />
