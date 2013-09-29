@@ -1,19 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Windows.Input;
-using jabber.client;
 
 namespace JabberWPF
 {
     public class Presenter : ObserverableObject
     {
-        private MessageList messageList = new MessageList();
-        private ObservableCollection<string> _messages = new ObservableCollection<string>();
-        private ObservableCollection<string> _roster = new ObservableCollection<string>();
+        private readonly MessageList messageList = new MessageList();
+        private readonly ObservableCollection<string> _messages = new ObservableCollection<string>();
+        private readonly ObservableCollection<string> _roster = new ObservableCollection<string>();
         private string _messageToSend = string.Empty;
-        private ChatModel _chatModel =new ChatModel();
-
+        private readonly ChatModel _chatModel =new ChatModel();
 
         public Presenter()
         {
@@ -71,6 +68,18 @@ namespace JabberWPF
             get
             {
                 return new ChatTransmitter(Transmit);
+            }
+        }
+
+        private void sendMsgTextbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // SendMessage(sendMsgTextbox.Text);
+            }
+            else if (e.Key == Key.Escape)
+            {
+
             }
         }
 

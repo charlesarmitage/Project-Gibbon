@@ -37,14 +37,22 @@ namespace JabberWPF
 
         public JabberClient Client { get { return _jabberClient; } }
 
+        public event Action<string, string> MessageTransmitted;
+
+        public event Action<string, string> MessageReceived;
+
+        public event Action<string> StatusUpdate;
+
+        public event Action RosterChanged;
+
         public void SendMessage(string target, string text)
         {
-            var msg = new Message(this._jabberClient.Document);
+            var msg = new Message(_jabberClient.Document);
             msg.Body = text;
 
-            foreach (jabber.JID rJid in this._rosterManager)
+            foreach (jabber.JID rJid in _rosterManager)
             {
-                Item rItem = this._rosterManager[rJid];
+                Item rItem = _rosterManager[rJid];
 
                 if (target == rJid.User)
                 {
@@ -67,8 +75,14 @@ namespace JabberWPF
 
             _jabberClient.Write(msg);
 
-            string m = string.Format("{0} : {1}", msg.To, msg.Body);
-            // messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
+            var m = string.Format("{0} : {1}", msg.To, msg.Body);
+            OnMessageTransmitted("You", m);
+        }
+
+        protected virtual void OnMessageTransmitted(string arg1, string arg2)
+        {
+            var handler = MessageTransmitted;
+            if (handler != null) handler(arg1, arg2);
         }
 
         private void ApplyDefaultJabberConfiguration(JabberClient jabberClient)
@@ -87,40 +101,54 @@ namespace JabberWPF
         void jabberClient_OnAuthError(object sender, System.Xml.XmlElement rp)
         {
             string errorMsg = string.Format("Error:{0}", rp.InnerText);
-            //statusLabel.Dispatcher.Invoke((Action)(() => { statusLabel.Content = errorMsg; }));
+            OnStatusUpdate(errorMsg);
         }
 
         void jabberClient_OnAuthenticate(object sender)
         {
-            this._clientConfig.Save(ConfigurationSaveMode.Full);
+            _clientConfig.Save(ConfigurationSaveMode.Full);
 
-            string statusMsg = string.Format("Online as : {0}", _jabberClient.User);
-            //Delegate updateStatus = (Action)(() => { statusLabel.Content = statusMsg; });
-            //statusLabel.Dispatcher.Invoke( updateStatus );
+            var statusMsg = string.Format("Online as : {0}", _jabberClient.User);
+            OnStatusUpdate(statusMsg);
         }
 
         void jabberClient_OnError(object sender, Exception ex)
         {
-            string errorMsg = string.Format("Error:{0}", ex.Message);
-            //Delegate errorStatus = (Action)(() => { statusLabel.Content = errorMsg; });
+            var errorMsg = string.Format("Error:{0}", ex.Message);
+            OnStatusUpdate(errorMsg);
+        }
 
-            //statusLabel.Dispatcher.Invoke(errorStatus);
+        protected virtual void OnStatusUpdate(string obj)
+        {
+            Action<string> handler = StatusUpdate;
+            if (handler != null) handler(obj);
         }
 
         void rosterManager_OnRosterItem(object sender, Item ri)
         {
             string user = string.Format("{0} ({1})", ri.Nickname, ri.JID);
-
+            OnRosterChanged();
             //rosterStackPanel.Dispatcher.Invoke((Action)(() => AddUserToRosterList(user)));
+        }
+
+        protected virtual void OnRosterChanged()
+        {
+            var handler = RosterChanged;
+            if (handler != null) handler();
         }
 
         void jabberClient_OnMessage(object sender, Message msg)
         {
-            if (!string.IsNullOrEmpty(msg.Body))
-            {
-                string m = string.Format("{0} : {1}", msg.From, msg.Body);
-            }
+            if (string.IsNullOrEmpty(msg.Body)) return;
+
+            var m = string.Format("{0} : {1}", msg.From, msg.Body);
+            OnMessageReceived(msg.From, m);
         }
 
+        protected virtual void OnMessageReceived(string arg1, string arg2)
+        {
+            var handler = MessageReceived;
+            if (handler != null) handler(arg1, arg2);
+        }
     }
 }
