@@ -12,19 +12,13 @@ namespace JabberWPF
         private ObservableCollection<string> _messages = new ObservableCollection<string>();
         private ObservableCollection<string> _roster = new ObservableCollection<string>();
         private string _messageToSend = string.Empty;
-
-        private readonly JabberClient jabberClient = new JabberClient();
-        private Configuration clientConfig;
-        private ClientConfig config;
+        private ChatModel _chatModel =new ChatModel();
 
 
         public Presenter()
         {
             _roster.Add("Laura");
             _roster.Add("Philippa");
-
-            clientConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config = (ClientConfig)clientConfig.Sections["clientconfig"];
         }
 
         public string Status
@@ -82,7 +76,7 @@ namespace JabberWPF
 
         private void ConfgureClient(string obj)
         {
-            var configWin = new ConfigurationWindow(jabberClient, config);
+            var configWin = new ConfigurationWindow(_chatModel.Client, _chatModel.Configuration);
             configWin.ShowDialog();
         }
 

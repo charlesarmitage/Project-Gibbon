@@ -94,6 +94,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ChatModel.cs" />
     <Compile Include="ChatTransmitter.cs" />
     <Compile Include="ClientConfig.cs" />
     <Compile Include="ConfigurationWindow.xaml.cs">

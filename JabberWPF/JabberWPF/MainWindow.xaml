@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:Jabber="clr-namespace:JabberWPF"
-        Title="Gibbon" Height="446" Width="525" ShowIconOnTitleBar="True" Loaded="MetroWindow_Loaded">
+        Title="Gibbon" Height="446" Width="525" ShowIconOnTitleBar="True">
 
     <Window.Resources>
         <ResourceDictionary>
