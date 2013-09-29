@@ -24,7 +24,7 @@
 
     <Grid VerticalAlignment="Center">
         <Button Content="Configure" HorizontalAlignment="Left" Name="configureButton" VerticalAlignment="Top" Click="configureButton_Click" />
-        <ListBox ItemsSource="{Binding Messages}" Height="100" Margin="5"/>
+        <ListBox ItemsSource="{Binding Messages}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="271" Height="100" Margin="5"/>
 
         <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}" Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" Name="sendMsgTextbox" VerticalAlignment="Top" Width="284" KeyDown="sendMsgTextbox_KeyDown" />
         <Button Content="Send" Command="{Binding SendMessage}" HorizontalAlignment="Left" Margin="380,349,0,0" Name="sendButton" VerticalAlignment="Top" FontSize="16" />
