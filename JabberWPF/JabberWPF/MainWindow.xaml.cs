@@ -34,6 +34,8 @@ namespace JabberWPF
         {
             InitializeComponent();
 
+            var presenter = (Presenter) this.DataContext;
+
             jabberClient = new JabberClient();
             rosterManager = new RosterManager();
             rosterManager.Stream = jabberClient;
@@ -60,7 +62,7 @@ namespace JabberWPF
             msgBox.Height = 32;
             msgBox.Text = message;
 
-            messagesStackPanel.Children.Add(msgBox);
+            //messagesStackPanel.Children.Add(msgBox);
         }
 
         void jabberClient_OnMessage(object sender, Message msg)
@@ -68,13 +70,13 @@ namespace JabberWPF
             if (!string.IsNullOrEmpty(msg.Body))
             {
                 string m = string.Format("{0} : {1}", msg.From, msg.Body);
-                messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
+              //  messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
             }
         }
 
         void rosterManager_OnRosterBegin(object sender)
         {
-            rosterStackPanel.Dispatcher.Invoke((Action)(() => rosterStackPanel.Children.Clear()));
+            //rosterStackPanel.Dispatcher.Invoke((Action)(() => rosterStackPanel.Children.Clear()));
         }
 
         void AddUserToRosterList(string user)
@@ -83,20 +85,20 @@ namespace JabberWPF
             entry.Height = 32;
             entry.Text = user;
 
-            rosterStackPanel.Children.Add(entry);
+            //rosterStackPanel.Children.Add(entry);
         }
 
         void rosterManager_OnRosterItem(object sender, Item ri)
         {
             string user = string.Format("{0} ({1})", ri.Nickname, ri.JID);
 
-            rosterStackPanel.Dispatcher.Invoke((Action)(() => AddUserToRosterList(user)));
+            //rosterStackPanel.Dispatcher.Invoke((Action)(() => AddUserToRosterList(user)));
         }
 
         void jabberClient_OnAuthError(object sender, System.Xml.XmlElement rp)
         {
             string errorMsg = string.Format("Error:{0}", rp.InnerText);
-            statusLabel.Dispatcher.Invoke((Action)(() => { statusLabel.Content = errorMsg; }));
+            //statusLabel.Dispatcher.Invoke((Action)(() => { statusLabel.Content = errorMsg; }));
         }
 
         void jabberClient_OnAuthenticate(object sender)
@@ -104,16 +106,16 @@ namespace JabberWPF
             this.clientConfig.Save(ConfigurationSaveMode.Full);
 
             string statusMsg = string.Format("Online as : {0}", jabberClient.User);
-            Delegate updateStatus = (Action)(() => { statusLabel.Content = statusMsg; });
-            statusLabel.Dispatcher.Invoke( updateStatus );
+            //Delegate updateStatus = (Action)(() => { statusLabel.Content = statusMsg; });
+            //statusLabel.Dispatcher.Invoke( updateStatus );
         }
 
         void jabberClient_OnError(object sender, Exception ex)
         {
             string errorMsg = string.Format("Error:{0}", ex.Message);
-            Delegate errorStatus = (Action)(() => { statusLabel.Content = errorMsg; });
+            //Delegate errorStatus = (Action)(() => { statusLabel.Content = errorMsg; });
 
-            statusLabel.Dispatcher.Invoke(errorStatus);
+            //statusLabel.Dispatcher.Invoke(errorStatus);
         }
 
         private void ApplyDefaultJabberConfiguration(JabberClient jabberClient)
@@ -145,7 +147,7 @@ namespace JabberWPF
         {
             if (e.Key == Key.Enter)
             {
-                SendMessage(sendMsgTextbox.Text);
+               // SendMessage(sendMsgTextbox.Text);
             }
             else if (e.Key == Key.Escape)
             {
@@ -162,29 +164,29 @@ namespace JabberWPF
             {
                 Item rItem = this.rosterManager[rJID];
 
-                if (this.toTextbox.Text == rJID.User)
-                {
-                    msg.To = rJID.Bare;
-                    break;
-                }
+              //  if (this.toTextbox.Text == rJID.User)
+              //  {
+              //      msg.To = rJID.Bare;
+              //      break;
+              //  }
 
-                if (this.toTextbox.Text == rItem.LocalName)
-                {
-                    msg.To = rItem.JID;
-                    break;
-                }
+              //  if (this.toTextbox.Text == rItem.LocalName)
+              //  {
+              //      msg.To = rItem.JID;
+              //      break;
+              //  }
 
-                if (this.toTextbox.Text == rJID.Bare)
-                {
-                    msg.To = rItem.JID;
-                    break;
-                }
+              //  if (this.toTextbox.Text == rJID.Bare)
+               // {
+                //    msg.To = rItem.JID;
+                //    break;
+               // }
             }
 
             jabberClient.Write(msg);
 
             string m = string.Format("{0} : {1}", msg.To, msg.Body);
-            messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
+           // messagesStackPanel.Dispatcher.Invoke((Action)(() => AddMsgToMsgList(m)));
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)

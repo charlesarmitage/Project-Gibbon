@@ -23,26 +23,24 @@
     </Window.DataContext>
 
     <Grid VerticalAlignment="Center">
-        <Button Content="Configure" HorizontalAlignment="Left" Name="configureButton" VerticalAlignment="Top" Click="configureButton_Click" />
-        <ListBox ItemsSource="{Binding Messages}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="271" Height="100" Margin="5"/>
-
-        <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}" Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" Name="sendMsgTextbox" VerticalAlignment="Top" Width="284" KeyDown="sendMsgTextbox_KeyDown" />
-        <Button Content="Send" Command="{Binding SendMessage}" HorizontalAlignment="Left" Margin="380,349,0,0" Name="sendButton" VerticalAlignment="Top" FontSize="16" />
-        <Viewbox Height="46" HorizontalAlignment="Left" Margin="7,29,0,0" Name="viewbox1" VerticalAlignment="Top" Width="207">
-            <Label Content="" Height="28" Name="statusLabel" />
-        </Viewbox>
-
-
-        <ScrollViewer Height="262" HorizontalAlignment="Left" Margin="7,81,0,0" Name="rosterScrollViewer" VerticalAlignment="Top" Width="207">
-            <StackPanel Name="rosterStackPanel" VerticalAlignment="Top" Width="189" CanVerticallyScroll="True"/>
-        </ScrollViewer>
-
-        <ScrollViewer Height="336" HorizontalAlignment="Left" Margin="220,7,0,0" Name="msgScrollViewer" VerticalAlignment="Top" Width="271">
-
-            <StackPanel Name="messagesStackPanel" VerticalAlignment="Top" CanVerticallyScroll="True"></StackPanel>
-        
-        </ScrollViewer>
-        
-        <TextBox Height="26" HorizontalAlignment="Left" Margin="8,349,0,0" Name="toTextbox" VerticalAlignment="Top" Width="76" />
+        <Grid>
+            <Button Content="Configure" Command="{Binding Configure}"
+                    HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Viewbox Height="46" HorizontalAlignment="Left" Margin="7,32,0,0" VerticalAlignment="Top">
+            <Label Content="{Binding Status}"/>
+            </Viewbox>
+            <ListBox ItemsSource="{Binding Roster}"
+                     HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,81,0,0" Width="207"/>
+            <ListBox ItemsSource="{Binding Messages}"
+                     HorizontalAlignment="Right" VerticalAlignment="Top" Width="271" Margin="5"/>
+        </Grid>
+        <Grid>
+            <TextBox Text="{Binding Recipient}"
+                     Height="26" HorizontalAlignment="Left" Margin="8,349,0,0" VerticalAlignment="Top" Width="76" />
+            <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}"
+                     Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" VerticalAlignment="Top" Width="284" />
+            <Button Content="Send" Command="{Binding SendMessage}"
+                    HorizontalAlignment="Left" Margin="380,349,0,0" VerticalAlignment="Top" FontSize="16" />
+        </Grid>
     </Grid>
 </Controls:MetroWindow>
