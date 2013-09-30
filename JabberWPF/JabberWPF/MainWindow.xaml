@@ -22,25 +22,27 @@
         <Jabber:Presenter/>
     </Window.DataContext>
 
-    <Grid VerticalAlignment="Center">
-        <Grid>
-            <Button Content="Configure" Command="{Binding Configure}"
+    <Grid>
+        <WrapPanel>
+            <StackPanel>
+                <Button Content="Configure" Command="{Binding Configure}"
                     HorizontalAlignment="Left" VerticalAlignment="Top" />
-            <Viewbox Height="46" HorizontalAlignment="Left" Margin="7,32,0,0" VerticalAlignment="Top">
-            <Label Content="{Binding Status}"/>
-            </Viewbox>
-            <ListBox ItemsSource="{Binding Roster}"
-                     HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,81,0,0" Width="207"/>
+                <Viewbox Height="46" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Label Content="{Binding Status}"/>
+                </Viewbox>
+                <ListBox ItemsSource="{Binding Roster}"
+                     HorizontalAlignment="Left" VerticalAlignment="Top" Width="207"/>
+            </StackPanel>
             <ListBox ItemsSource="{Binding Messages}"
                      HorizontalAlignment="Right" VerticalAlignment="Top" Width="271" Margin="5"/>
-        </Grid>
-        <Grid>
+        </WrapPanel>
+        <WrapPanel VerticalAlignment="Bottom" Height="70">
             <TextBox Text="{Binding Recipient}"
-                     Height="26" HorizontalAlignment="Left" Margin="8,349,0,0" VerticalAlignment="Top" Width="76" />
+                     Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" />
             <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}"
-                     Height="58" HorizontalAlignment="Left" Margin="90,349,0,0" VerticalAlignment="Top" Width="284" />
+                     Height="58" HorizontalAlignment="Left" VerticalAlignment="Top" Width="284" />
             <Button Content="Send" Command="{Binding SendMessage}"
-                    HorizontalAlignment="Left" Margin="380,349,0,0" VerticalAlignment="Top" FontSize="16" />
-        </Grid>
+                    HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" />
+        </WrapPanel>
     </Grid>
 </Controls:MetroWindow>
