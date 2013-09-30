@@ -9,7 +9,7 @@ namespace JabberWPF
     public class Presenter : ObserverableObject
     {
         private readonly MessageList messageList = new MessageList();
-        private readonly ObservableCollection<string> _messages = new ObservableCollection<string>();
+        private ObservableCollection<string> _messages = new ObservableCollection<string>();
         private ObservableCollection<string> _roster = new ObservableCollection<string>();
         private string _messageToSend = string.Empty;
         private readonly ChatModel _chatModel =new ChatModel();
@@ -85,14 +85,8 @@ namespace JabberWPF
 
         private void OnMessageReceived(string sender, string message)
         {
-            Application.Current.Dispatcher.Invoke(
-                (Action)(() =>
-                {
-                    this._messages.Add(string.Format("{0}: {1}", sender, message));
-                    RaisePropertyChangedEvent("Messages");
-                }));
-            // TODO: Read messages from ChatModel in same way as Roster
-            
+            this._messages = new ObservableCollection<string>(_chatModel.Messages);
+            RaisePropertyChangedEvent("Messages");
         }
 
         private void sendMsgTextbox_KeyDown(object sender, KeyEventArgs e)

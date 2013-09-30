@@ -15,10 +15,11 @@ namespace JabberWPF
         private readonly RosterManager _rosterManager;
         private readonly Configuration _clientConfig;
         private readonly ClientConfig _config;
-        private readonly List<string> _rosterList = new List<string>();
 
         public ChatModel()
         {
+            Roster = new List<string>();
+            Messages = new List<string>();
             _rosterManager = new RosterManager {Stream = _jabberClient};
             _clientConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             _config = (ClientConfig)_clientConfig.Sections["clientconfig"];
@@ -46,10 +47,9 @@ namespace JabberWPF
 
         public event Action RosterChanged;
 
-        public IEnumerable<string> Roster
-        {
-            get { return _rosterList; }
-        }
+        public ICollection<string> Roster { get; private set; }
+
+        public ICollection<string> Messages { get; private set; } 
 
         public void SendMessage(string target, string text)
         {
@@ -81,6 +81,7 @@ namespace JabberWPF
             _jabberClient.Write(msg);
 
             var m = string.Format("{0}: {1}", msg.To, msg.Body);
+            Messages.Add(m);
             OnMessageTransmitted("You", m);
         }
 
@@ -132,7 +133,7 @@ namespace JabberWPF
         private void rosterManager_OnRosterItem(object sender, Item ri)
         {
             var user = string.Format("{0} ({1} : {2})", ri.Nickname, ri.JID, ri.Subscription);
-            _rosterList.Add(user);
+            Roster.Add(user);
             OnRosterChanged();
         }
 
@@ -145,13 +146,15 @@ namespace JabberWPF
         private void jabberClient_OnMessage(object sender, Message msg)
         {
             if (string.IsNullOrEmpty(msg.Body)) return;
+
+            Messages.Add(string.Format("{0}: {1}", msg.From, msg.Body));
             OnMessageReceived(msg.From, msg.Body);
         }
 
-        protected virtual void OnMessageReceived(string arg1, string arg2)
+        protected virtual void OnMessageReceived(string from, string message)
         {
             var handler = MessageReceived;
-            if (handler != null) handler(arg1, arg2);
+            if (handler != null) handler(from, message);
         }
     }
 }
