@@ -120,7 +120,7 @@ namespace JabberWPF
 
         protected virtual void OnStatusUpdate(string obj)
         {
-            Action<string> handler = StatusUpdate;
+            var handler = StatusUpdate;
             if (handler != null) handler(obj);
         }
 

@@ -16,11 +16,16 @@ namespace JabberWPF
         {
             _roster.Add("Laura");
             _roster.Add("Philippa");
+            this.Status = "Offline";
+            _chatModel.StatusUpdate += OnStatusUpdate;
         }
 
-        public string Status
+        public string Status { get; set; }
+
+        private void OnStatusUpdate(string obj)
         {
-            get { return "Offline"; }
+            this.Status = obj;
+            RaisePropertyChangedEvent("Status");
         }
 
         public IEnumerable<string> Roster
