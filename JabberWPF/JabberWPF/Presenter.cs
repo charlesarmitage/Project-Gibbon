@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace JabberWPF
@@ -83,8 +85,14 @@ namespace JabberWPF
 
         private void OnMessageReceived(string sender, string message)
         {
-            this._messages.Add(string.Format("{0}: {1}", sender, message));
-            RaisePropertyChangedEvent("Messages");
+            Application.Current.Dispatcher.Invoke(
+                (Action)(() =>
+                {
+                    this._messages.Add(string.Format("{0}: {1}", sender, message));
+                    RaisePropertyChangedEvent("Messages");
+                }));
+            // TODO: Read messages from ChatModel in same way as Roster
+            
         }
 
         private void sendMsgTextbox_KeyDown(object sender, KeyEventArgs e)
