@@ -124,15 +124,15 @@ namespace JabberWPF
             OnStatusUpdate(errorMsg);
         }
 
-        protected virtual void OnStatusUpdate(string obj)
+        protected virtual void OnStatusUpdate(string status)
         {
             var handler = StatusUpdate;
-            if (handler != null) handler(obj);
+            if (handler != null) handler(status);
         }
 
         void rosterManager_OnRosterItem(object sender, Item ri)
         {
-            var user = string.Format("{0} ({1})", ri.Nickname, ri.JID);
+            var user = string.Format("{0} ({1} : {2})", ri.Nickname, ri.JID, ri.Subscription);
             _rosterList.Add(user);
             OnRosterChanged();
         }

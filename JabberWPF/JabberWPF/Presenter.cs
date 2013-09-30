@@ -17,8 +17,10 @@ namespace JabberWPF
             _roster.Add("Laura");
             _roster.Add("Philippa");
             this.Status = "Offline";
+            this.Recipient = "To...";
             _chatModel.StatusUpdate += OnStatusUpdate;
             _chatModel.RosterChanged += OnRosterChanged;
+            _chatModel.MessageReceived += OnMessageReceived;
         }
 
         public string Status { get; set; }
@@ -26,18 +28,6 @@ namespace JabberWPF
         public IEnumerable<string> Roster
         {
             get { return this._roster;  }
-        }
-
-        private void OnStatusUpdate(string obj)
-        {
-            this.Status = obj;
-            RaisePropertyChangedEvent("Status");
-        }
-
-        private void OnRosterChanged()
-        {
-            _roster = new ObservableCollection<string>(_chatModel.Roster);
-            RaisePropertyChangedEvent("Roster");
         }
 
         public IEnumerable<string> Messages
@@ -48,11 +38,7 @@ namespace JabberWPF
             }
         }
 
-        public string Recipient
-        {
-            get { return "To..."; }
-            set { }
-        }
+        public string Recipient{ get; set; }
 
         public string MessageToSend
         {
@@ -83,6 +69,24 @@ namespace JabberWPF
             }
         }
 
+        private void OnStatusUpdate(string status)
+        {
+            this.Status = status;
+            RaisePropertyChangedEvent("Status");
+        }
+
+        private void OnRosterChanged()
+        {
+            this._roster = new ObservableCollection<string>(this._chatModel.Roster);
+            RaisePropertyChangedEvent("Roster");
+        }
+
+        private void OnMessageReceived(string sender, string message)
+        {
+            this._messages.Add(string.Format("{0}: {1}", sender, message));
+            RaisePropertyChangedEvent("Messages");
+        }
+
         private void sendMsgTextbox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -105,6 +109,8 @@ namespace JabberWPF
         {
             messageList.SendMessage(_messageToSend);
             _messages.Add(_messageToSend);
+            _chatModel.SendMessage(this.Recipient, _messageToSend);
+
             RaisePropertyChangedEvent("Messages");
         }
     }
