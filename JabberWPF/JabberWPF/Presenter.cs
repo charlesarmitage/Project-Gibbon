@@ -8,7 +8,7 @@ namespace JabberWPF
     {
         private readonly MessageList messageList = new MessageList();
         private readonly ObservableCollection<string> _messages = new ObservableCollection<string>();
-        private readonly ObservableCollection<string> _roster = new ObservableCollection<string>();
+        private ObservableCollection<string> _roster = new ObservableCollection<string>();
         private string _messageToSend = string.Empty;
         private readonly ChatModel _chatModel =new ChatModel();
 
@@ -18,9 +18,15 @@ namespace JabberWPF
             _roster.Add("Philippa");
             this.Status = "Offline";
             _chatModel.StatusUpdate += OnStatusUpdate;
+            _chatModel.RosterChanged += OnRosterChanged;
         }
 
         public string Status { get; set; }
+
+        public IEnumerable<string> Roster
+        {
+            get { return this._roster;  }
+        }
 
         private void OnStatusUpdate(string obj)
         {
@@ -28,9 +34,10 @@ namespace JabberWPF
             RaisePropertyChangedEvent("Status");
         }
 
-        public IEnumerable<string> Roster
+        private void OnRosterChanged()
         {
-            get { return _roster;  }
+            _roster = new ObservableCollection<string>(_chatModel.Roster);
+            RaisePropertyChangedEvent("Roster");
         }
 
         public IEnumerable<string> Messages

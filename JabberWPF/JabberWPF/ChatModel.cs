@@ -15,7 +15,8 @@ namespace JabberWPF
         private readonly RosterManager _rosterManager;
         private readonly Configuration _clientConfig;
         private readonly ClientConfig _config;
-     
+        private readonly List<string> _rosterList = new List<string>();
+
         public ChatModel()
         {
             _rosterManager = new RosterManager {Stream = _jabberClient};
@@ -44,6 +45,11 @@ namespace JabberWPF
         public event Action<string> StatusUpdate;
 
         public event Action RosterChanged;
+
+        public IEnumerable<string> Roster
+        {
+            get { return _rosterList; }
+        }
 
         public void SendMessage(string target, string text)
         {
@@ -100,7 +106,7 @@ namespace JabberWPF
 
         void jabberClient_OnAuthError(object sender, System.Xml.XmlElement rp)
         {
-            string errorMsg = string.Format("Error:{0}", rp.InnerText);
+            var errorMsg = string.Format("Error:{0}", rp.InnerText);
             OnStatusUpdate(errorMsg);
         }
 
@@ -126,9 +132,9 @@ namespace JabberWPF
 
         void rosterManager_OnRosterItem(object sender, Item ri)
         {
-            string user = string.Format("{0} ({1})", ri.Nickname, ri.JID);
+            var user = string.Format("{0} ({1})", ri.Nickname, ri.JID);
+            _rosterList.Add(user);
             OnRosterChanged();
-            //rosterStackPanel.Dispatcher.Invoke((Action)(() => AddUserToRosterList(user)));
         }
 
         protected virtual void OnRosterChanged()
