@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
 using jabber;
 using jabber.client;
 using jabber.protocol.client;
@@ -31,9 +30,19 @@ namespace JabberWPF
             _jabberClient.OnAuthenticate += jabberClient_OnAuthenticate;
             _jabberClient.OnAuthError += jabberClient_OnAuthError;
             _jabberClient.OnMessage += jabberClient_OnMessage;
-            _rosterManager.OnRosterItem += rosterManager_OnRosterItem;
+            _jabberClient.OnPresence += JabberClientOnOnPresence;
 
             _jabberClient.Connect();
+        }
+
+        private void JabberClientOnOnPresence(object sender, Presence pres)
+        {
+            if(pres.Type == PresenceType.available)
+            {
+                var user = string.Format("{0}", pres.From);
+                Roster.Add(user);
+                OnRosterChanged();
+            }
         }
 
         public ClientConfig Configuration { get { return _config; } }
