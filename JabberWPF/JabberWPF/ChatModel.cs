@@ -53,8 +53,7 @@ namespace JabberWPF
 
         public void SendMessage(string target, string text)
         {
-            var msg = new Message(_jabberClient.Document);
-            msg.Body = text;
+            var msg = new Message(_jabberClient.Document) {Body = text};
 
             foreach (jabber.JID rJid in _rosterManager)
             {
@@ -81,7 +80,7 @@ namespace JabberWPF
 
             _jabberClient.Write(msg);
 
-            var m = string.Format("{0} : {1}", msg.To, msg.Body);
+            var m = string.Format("{0}: {1}", msg.To, msg.Body);
             OnMessageTransmitted("You", m);
         }
 
@@ -104,21 +103,21 @@ namespace JabberWPF
             jabberClient.LocalCertificate = null;
         }
 
-        void jabberClient_OnAuthError(object sender, System.Xml.XmlElement rp)
+        private void jabberClient_OnAuthError(object sender, System.Xml.XmlElement rp)
         {
             var errorMsg = string.Format("Error:{0}", rp.InnerText);
             OnStatusUpdate(errorMsg);
         }
 
-        void jabberClient_OnAuthenticate(object sender)
+        private void jabberClient_OnAuthenticate(object sender)
         {
             _clientConfig.Save(ConfigurationSaveMode.Full);
 
-            var statusMsg = string.Format("Online as : {0}", _jabberClient.User);
+            var statusMsg = string.Format("Online as:{0}", _jabberClient.User);
             OnStatusUpdate(statusMsg);
         }
 
-        void jabberClient_OnError(object sender, Exception ex)
+        private void jabberClient_OnError(object sender, Exception ex)
         {
             var errorMsg = string.Format("Error:{0}", ex.Message);
             OnStatusUpdate(errorMsg);
@@ -130,7 +129,7 @@ namespace JabberWPF
             if (handler != null) handler(status);
         }
 
-        void rosterManager_OnRosterItem(object sender, Item ri)
+        private void rosterManager_OnRosterItem(object sender, Item ri)
         {
             var user = string.Format("{0} ({1} : {2})", ri.Nickname, ri.JID, ri.Subscription);
             _rosterList.Add(user);
@@ -143,12 +142,10 @@ namespace JabberWPF
             if (handler != null) handler();
         }
 
-        void jabberClient_OnMessage(object sender, Message msg)
+        private void jabberClient_OnMessage(object sender, Message msg)
         {
             if (string.IsNullOrEmpty(msg.Body)) return;
-
-            var m = string.Format("{0} : {1}", msg.From, msg.Body);
-            OnMessageReceived(msg.From, m);
+            OnMessageReceived(msg.From, msg.Body);
         }
 
         protected virtual void OnMessageReceived(string arg1, string arg2)
