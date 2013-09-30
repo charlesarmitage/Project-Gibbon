@@ -22,8 +22,8 @@
         <Jabber:Presenter/>
     </Window.DataContext>
 
-    <Grid>
-        <WrapPanel>
+    <StackPanel>
+        <WrapPanel Height="346">
             <StackPanel>
                 <Button Content="Configure" Command="{Binding Configure}"
                     HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -31,10 +31,10 @@
                     <Label Content="{Binding Status}"/>
                 </Viewbox>
                 <ListBox ItemsSource="{Binding Roster}"
-                     HorizontalAlignment="Left" VerticalAlignment="Top" Width="207"/>
+                     HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="207" MaxHeight="260"/>
             </StackPanel>
             <ListBox ItemsSource="{Binding Messages}"
-                     HorizontalAlignment="Right" VerticalAlignment="Top" Width="271" Margin="5"/>
+                     HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="271" Margin="5" />
         </WrapPanel>
         <WrapPanel VerticalAlignment="Bottom" Height="70">
             <TextBox Text="{Binding Recipient}"
@@ -42,7 +42,7 @@
             <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}"
                      Height="58" HorizontalAlignment="Left" VerticalAlignment="Top" Width="284" />
             <Button Content="Send" Command="{Binding SendMessage}"
-                    HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" />
+                    HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" />
         </WrapPanel>
-    </Grid>
+    </StackPanel>
 </Controls:MetroWindow>
