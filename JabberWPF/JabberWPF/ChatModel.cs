@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using jabber;
 using jabber.client;
 using jabber.protocol.client;
 using jabber.protocol.iq;
@@ -55,32 +56,29 @@ namespace JabberWPF
         {
             var msg = new Message(_jabberClient.Document) {Body = text};
 
-            foreach (jabber.JID rJid in _rosterManager)
+            bool isTargetFound = false;
+            var id = this._rosterManager.Cast<JID>().FirstOrDefault(rJid => target == rJid.User || target == rJid.Bare);
+            if(id != null)
             {
-                Item rItem = _rosterManager[rJid];
-
-                if (target == rJid.User)
+                isTargetFound = true;
+                msg.To = id.Bare;
+            }
+            else
+            {
+                var localId = this._rosterManager.Cast<Item>().FirstOrDefault(rItem => target == rItem.LocalName);
+                if (localId != null)
                 {
-                    msg.To = rJid.Bare;
-                    break;
-                }
-
-                if (target == rItem.LocalName)
-                {
-                    msg.To = rItem.JID;
-                    break;
-                }
-
-                if (target == rJid.Bare)
-                {
-                    msg.To = rItem.JID;
-                    break;
+                    isTargetFound = true;
+                    msg.To = localId.JID;
                 }
             }
 
-            _jabberClient.Write(msg);
+            if (isTargetFound)
+            {
+                _jabberClient.Write(msg);
+            }
 
-            var m = string.Format("{0}: {1}", msg.To, msg.Body);
+            var m = string.Format("{0}: {1}", target, msg.Body);
             Messages.Add(m);
             OnMessageTransmitted("You", m);
         }
