@@ -22,21 +22,27 @@
         <Jabber:Presenter/>
     </Window.DataContext>
 
-    <StackPanel>
-        <WrapPanel Height="346">
-            <StackPanel>
-                <Button Content="Configure" Command="{Binding Configure}"
-                    HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <Viewbox Height="46" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <Label Content="{Binding Status}"/>
-                </Viewbox>
-                <ListBox ItemsSource="{Binding Roster}"
-                     HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="207" MaxHeight="260"/>
+    <StackPanel VerticalAlignment="Bottom">
+        <WrapPanel Name="ChatPanel" MinHeight="346" VerticalAlignment="Bottom">
+            <StackPanel VerticalAlignment="Stretch">
+                
+                <StackPanel Name="StatusPanel">
+                    <Button Content="Configure" Command="{Binding Configure}"
+                        HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <Viewbox Height="46" MaxWidth="210" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Label Content="{Binding Status}"/>
+                    </Viewbox>
+                </StackPanel>
+                
+                <ListBox Name="Roster" ItemsSource="{Binding Roster}"
+                         HorizontalAlignment="Left" Width="210" Height="240"/>
             </StackPanel>
+            
             <ListBox ItemsSource="{Binding Messages}"
-                     HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="271" Margin="5" />
+                     HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="295"/>
         </WrapPanel>
-        <WrapPanel VerticalAlignment="Bottom" Height="70">
+        
+        <WrapPanel Name="TransmitPanel" VerticalAlignment="Bottom" Height="70">
             <TextBox Text="{Binding Recipient}"
                      Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" />
             <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}"

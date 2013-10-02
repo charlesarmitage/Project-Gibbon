@@ -8,7 +8,7 @@ namespace JabberWPF
 {
     public class Presenter : ObserverableObject
     {
-        private readonly MessageList messageList = new MessageList();
+        //private readonly MessageList messageList = new MessageList();
         private ObservableCollection<string> _messages = new ObservableCollection<string>();
         private ObservableCollection<string> _roster = new ObservableCollection<string>();
         private string _messageToSend = string.Empty;
@@ -16,13 +16,17 @@ namespace JabberWPF
 
         public Presenter()
         {
-            _roster.Add("Laura");
-            _roster.Add("Philippa");
+            for (int i = 0; i < 50; i++)
+            {
+                _roster.Add("Laura");
+                _roster.Add("Philippa");
+            }
             this.Status = "Offline";
             this.Recipient = "To...";
             _chatModel.StatusUpdate += OnStatusUpdate;
             _chatModel.RosterChanged += OnRosterChanged;
             _chatModel.MessageReceived += OnMessageReceived;
+            _chatModel.MessageTransmitted += OnMessageTransmitted;
         }
 
         public string Status { get; set; }
@@ -89,11 +93,17 @@ namespace JabberWPF
             RaisePropertyChangedEvent("Messages");
         }
 
+        private void OnMessageTransmitted(string arg1, string arg2)
+        {
+            this._messages = new ObservableCollection<string>(_chatModel.Messages);
+            RaisePropertyChangedEvent("Messages");
+        }
+
         private void sendMsgTextbox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                // SendMessage(sendMsgTextbox.Text);
+                this.TransmitMessage();
             }
             else if (e.Key == Key.Escape)
             {
@@ -109,10 +119,13 @@ namespace JabberWPF
 
         private void Transmit(string message)
         {
-            messageList.SendMessage(_messageToSend);
-            _messages.Add(_messageToSend);
-            _chatModel.SendMessage(this.Recipient, _messageToSend);
+            this.TransmitMessage();
+        }
 
+        private void TransmitMessage()
+        {
+            this._chatModel.SendMessage(this.Recipient, this._messageToSend);
+            this._messageToSend = string.Empty;
             RaisePropertyChangedEvent("Messages");
         }
     }
