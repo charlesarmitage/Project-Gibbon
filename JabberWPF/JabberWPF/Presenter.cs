@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Linq;
 
 namespace JabberWPF
 {
@@ -103,7 +104,13 @@ namespace JabberWPF
 
         public void UpdateSendMessageText(string text)
         {
-            
+            var words = text.Split();
+            var recipient = words.FirstOrDefault(word => word.StartsWith(@"@"));
+            if(recipient != null)
+            {
+                this.Recipient = recipient.Trim('@');
+                RaisePropertyChangedEvent("Recipient");
+            }
         }
 
         public void SendMessageKeyPressed(Key key)
