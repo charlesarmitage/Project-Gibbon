@@ -130,7 +130,6 @@ namespace JabberWPF
 
         private void Transmit(string message)
         {
-            // TODO: Remove @user word if present
             this.TransmitMessage();
         }
 
