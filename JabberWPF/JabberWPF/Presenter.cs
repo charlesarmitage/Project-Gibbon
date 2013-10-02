@@ -95,16 +95,21 @@ namespace JabberWPF
             RaisePropertyChangedEvent("Messages");
         }
 
-        private void sendMsgTextbox_KeyDown(object sender, KeyEventArgs e)
+        public void UpdateSendMessageText(string text)
         {
-            if (e.Key == Key.Enter)
+            
+        }
+
+        public void SendMessageKeyPressed(Key key)
+        {
+            if (key == Key.Enter)
             {
                 this.TransmitMessage();
             }
-            else if (e.Key == Key.Escape)
+            else if (key == Key.Escape)
             {
-
-            }
+                this.MessageToSend = string.Empty;
+            }            
         }
 
         private void ConfgureClient(string obj)
