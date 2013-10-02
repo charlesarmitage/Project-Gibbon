@@ -104,13 +104,9 @@ namespace JabberWPF
 
         public void UpdateSendMessageText(string text)
         {
-            var words = text.Split();
-            var recipient = words.FirstOrDefault(word => word.StartsWith(@"@"));
-            if(recipient != null)
-            {
-                this.Recipient = recipient.Trim('@');
-                RaisePropertyChangedEvent("Recipient");
-            }
+            var recipient = GetMessageRecipient(text);
+            this.Recipient = recipient.Trim('@');
+            RaisePropertyChangedEvent("Recipient");
         }
 
         public void SendMessageKeyPressed(Key key)
@@ -134,14 +130,24 @@ namespace JabberWPF
 
         private void Transmit(string message)
         {
+            // TODO: Remove @user word if present
             this.TransmitMessage();
         }
 
         private void TransmitMessage()
         {
-            this._chatModel.SendMessage(this.Recipient, this._messageToSend);
+            var recipient = GetMessageRecipient(_messageToSend);
+            var parsedMessage = _messageToSend.Replace(recipient, "");
+
+            this._chatModel.SendMessage(this.Recipient, parsedMessage);
             this.MessageToSend = string.Empty;
             RaisePropertyChangedEvent("Messages");
+        }
+
+        private static string GetMessageRecipient(string message)
+        {
+            var words = message.Split();
+            return words.FirstOrDefault(word => word.StartsWith("@")) ?? string.Empty;
         }
     }
 }
