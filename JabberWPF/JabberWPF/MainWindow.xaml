@@ -44,7 +44,8 @@
         
         <WrapPanel Name="TransmitPanel" VerticalAlignment="Bottom" Height="70">
             <TextBox Text="{Binding Recipient}"
-                     Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" />
+                     Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76"
+                     Controls:TextboxHelper.Watermark="To.."/>
             <TextBox Text="{Binding MessageToSend, UpdateSourceTrigger=PropertyChanged}"
                      Height="58" HorizontalAlignment="Left" VerticalAlignment="Top" Width="284" />
             <Button Content="Send" Command="{Binding SendMessage}"

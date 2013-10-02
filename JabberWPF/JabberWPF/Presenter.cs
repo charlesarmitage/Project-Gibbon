@@ -8,7 +8,6 @@ namespace JabberWPF
 {
     public class Presenter : ObserverableObject
     {
-        //private readonly MessageList messageList = new MessageList();
         private ObservableCollection<string> _messages = new ObservableCollection<string>();
         private ObservableCollection<string> _roster = new ObservableCollection<string>();
         private string _messageToSend = string.Empty;
@@ -22,7 +21,6 @@ namespace JabberWPF
                 _roster.Add("Philippa");
             }
             this.Status = "Offline";
-            this.Recipient = "To...";
             _chatModel.StatusUpdate += OnStatusUpdate;
             _chatModel.RosterChanged += OnRosterChanged;
             _chatModel.MessageReceived += OnMessageReceived;
