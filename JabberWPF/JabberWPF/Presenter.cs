@@ -9,7 +9,7 @@ namespace JabberWPF
         private ObservableCollection<string> _messages = new ObservableCollection<string>();
         private ObservableCollection<string> _roster = new ObservableCollection<string>();
         private string _messageToSend = string.Empty;
-        private readonly ChatModel _chatModel =new ChatModel();
+        private readonly IChatModel _chatModel;
 
         public Presenter()
         {
@@ -19,10 +19,16 @@ namespace JabberWPF
                 _roster.Add("Philippa");
             }
             this.Status = "Offline";
-            _chatModel.StatusUpdate += OnStatusUpdate;
-            _chatModel.RosterChanged += OnRosterChanged;
-            _chatModel.MessageReceived += OnMessageReceived;
-            _chatModel.MessageTransmitted += OnMessageTransmitted;
+            _chatModel = new EchoChatModel();
+            this.ConnectToChatModel(this._chatModel);
+        }
+
+        private void ConnectToChatModel(IChatModel chatModel)
+        {
+            chatModel.StatusUpdate += this.OnStatusUpdate;
+            chatModel.RosterChanged += this.OnRosterChanged;
+            chatModel.MessageReceived += this.OnMessageReceived;
+            chatModel.MessageTransmitted += this.OnMessageTransmitted;
         }
 
         public string Status { get; set; }
@@ -102,14 +108,15 @@ namespace JabberWPF
 
         public void SendMessageKeyPressed(Key key)
         {
-            if (key == Key.Enter)
+            switch (key)
             {
-                this.TransmitMessage();
+                case Key.Enter:
+                    this.TransmitMessage();
+                    break;
+                case Key.Escape:
+                    this.MessageToSend = string.Empty;
+                    break;
             }
-            else if (key == Key.Escape)
-            {
-                this.MessageToSend = string.Empty;
-            }            
         }
 
         private void ConfgureClient(string obj)

@@ -9,7 +9,7 @@ using jabber.protocol.iq;
 
 namespace JabberWPF
 {
-    public class ChatModel
+    public class ChatModel : IChatModel
     {
         private readonly JabberClient _jabberClient = new JabberClient();
         private readonly RosterManager _rosterManager;
@@ -35,16 +35,6 @@ namespace JabberWPF
             _jabberClient.Connect();
         }
 
-        private void JabberClientOnOnPresence(object sender, Presence pres)
-        {
-            if(pres.Type == PresenceType.available)
-            {
-                var user = string.Format("{0}", pres.From);
-                Roster.Add(user);
-                OnRosterChanged();
-            }
-        }
-
         public ClientConfig Configuration { get { return _config; } }
 
         public JabberClient Client { get { return _jabberClient; } }
@@ -59,7 +49,7 @@ namespace JabberWPF
 
         public ICollection<string> Roster { get; private set; }
 
-        public ICollection<string> Messages { get; private set; } 
+        public ICollection<string> Messages { get; private set; }
 
         public void SendMessage(string target, string text)
         {
@@ -87,9 +77,19 @@ namespace JabberWPF
                 _jabberClient.Write(msg);
             }
 
-            var m = string.Format("{0}: {1}", target, msg.Body);
+            var m = string.Format("You: {0}", msg.Body);
             Messages.Add(m);
             OnMessageTransmitted("You", m);
+        }
+
+        private void JabberClientOnOnPresence(object sender, Presence pres)
+        {
+            if(pres.Type == PresenceType.available)
+            {
+                var user = string.Format("{0}", pres.From);
+                this.Roster.Add(user);
+                this.OnRosterChanged();
+            }
         }
 
         protected virtual void OnMessageTransmitted(string arg1, string arg2)
