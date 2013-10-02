@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 
 namespace JabberWPF
@@ -123,7 +121,7 @@ namespace JabberWPF
         private void TransmitMessage()
         {
             this._chatModel.SendMessage(this.Recipient, this._messageToSend);
-            this._messageToSend = string.Empty;
+            this.MessageToSend = string.Empty;
             RaisePropertyChangedEvent("Messages");
         }
     }
