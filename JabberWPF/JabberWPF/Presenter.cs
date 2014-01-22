@@ -7,21 +7,23 @@ namespace JabberWPF
 {
     public class Presenter : ObserverableObject
     {
-        private ObservableCollection<string> _messages = new ObservableCollection<string>();
-        private ObservableCollection<string> _roster = new ObservableCollection<string>();
-        private string _messageToSend = string.Empty;
         private readonly IChatModel _chatModel;
 
         public Presenter()
         {
+            Status = "Offline";
+            Roster = new ObservableCollection<string>();
+            Messages = new ObservableCollection<string>();
+            MessageToSend = string.Empty;
+
             for (int i = 0; i < 50; i++)
             {
-                _roster.Add("Laura");
-                _roster.Add("Philippa");
+                Roster.Add("Laura");
+                Roster.Add("Philippa");
             }
-            this.Status = "Offline";
+
             _chatModel = new EchoChatModel();
-            this.ConnectToChatModel(this._chatModel);
+            ConnectToChatModel(_chatModel);
         }
 
         private void ConnectToChatModel(IChatModel chatModel)
@@ -34,39 +36,19 @@ namespace JabberWPF
 
         public string Status { get; set; }
 
-        public IEnumerable<string> Roster
-        {
-            get { return this._roster;  }
-        }
+        public ObservableCollection<string> Roster { get; private set; }
 
-        public IEnumerable<string> Messages
-        {
-            get
-            {
-                return _messages;
-            }
-        }
+        public ObservableCollection<string> Messages { get; private set; }
 
-        public string Recipient{ get; set; }
+        public string Recipient { get; set; }
 
-        public string MessageToSend
-        {
-            get
-            {
-                return _messageToSend;
-            }
-            set
-            {
-                _messageToSend = value;
-                RaisePropertyChangedEvent("MessageToSend");
-            }
-        }
+        public string MessageToSend { get; set; }
 
         public ICommand Configure
         {
             get
             {
-                return new ChatTransmitter(ConfgureClient);
+                return new ChatTransmitter(ConfigureClient);
             }
         }
 
@@ -80,32 +62,32 @@ namespace JabberWPF
 
         private void OnStatusUpdate(string status)
         {
-            this.Status = status;
-            RaisePropertyChangedEvent("Status");
+            Status = status;
         }
 
         private void OnRosterChanged()
         {
-            this._roster = new ObservableCollection<string>(this._chatModel.Roster);
-            RaisePropertyChangedEvent("Roster");
+            var newRosterItems = _chatModel.Roster.Except(Roster);
+            foreach (var newRosterItem in newRosterItems)
+            {
+                Roster.Add(newRosterItem);
+            }
         }
 
         private void OnMessageReceived(string sender, string message)
         {
-            this._messages = new ObservableCollection<string>(_chatModel.Messages);
-            RaisePropertyChangedEvent("Messages");
+            AddNewMessagesToMessageList(_chatModel.Messages);
         }
 
         private void OnMessageTransmitted(string sender, string message)
         {
-            this._messages = new ObservableCollection<string>(_chatModel.Messages);
-            RaisePropertyChangedEvent("Messages");
+            AddNewMessagesToMessageList(_chatModel.Messages);
         }
 
         public void UpdateSendMessageText(string text)
         {
             var recipient = GetMessageRecipient(text);
-            this.Recipient = recipient.Trim('@');
+            Recipient = recipient.Trim('@');
             RaisePropertyChangedEvent("Recipient");
         }
 
@@ -114,15 +96,24 @@ namespace JabberWPF
             switch (key)
             {
                 case Key.Enter:
-                    this.TransmitMessage();
+                    TransmitMessage();
                     break;
                 case Key.Escape:
-                    this.MessageToSend = string.Empty;
+                    MessageToSend = string.Empty;
                     break;
             }
         }
 
-        private void ConfgureClient(string obj)
+        private void AddNewMessagesToMessageList(IEnumerable<string> modelMessages)
+        {
+            var newMessages = modelMessages.Except(Messages);
+            foreach (var newMessage in newMessages)
+            {
+                Messages.Add(newMessage);
+            }
+        }
+
+        private void ConfigureClient(string obj)
         {
             var configWin = new ConfigurationWindow(_chatModel.Client, _chatModel.Configuration);
             configWin.ShowDialog();
@@ -130,16 +121,16 @@ namespace JabberWPF
 
         private void Transmit(string message)
         {
-            this.TransmitMessage();
+            TransmitMessage();
         }
 
         private void TransmitMessage()
         {
-            var recipient = GetMessageRecipient(_messageToSend);
-            this.Recipient = recipient.Trim('@');
-            var messageText = _messageToSend.Replace(recipient, "");
+            var recipient = GetMessageRecipient(MessageToSend);
+            var messageText = MessageToSend.Replace(recipient, "");
 
-            _chatModel.SendMessage(this.Recipient, messageText);
+            Recipient = recipient.Trim('@');
+            _chatModel.SendMessage(Recipient, messageText);
             MessageToSend = string.Empty;
         }
 
