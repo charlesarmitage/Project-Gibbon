@@ -20,7 +20,7 @@ namespace JabberWPF
                 _roster.Add("Philippa");
             }
             this.Status = "Offline";
-            _chatModel = new ChatModel();//new EchoChatModel();
+            _chatModel = new EchoChatModel();
             this.ConnectToChatModel(this._chatModel);
         }
 
@@ -96,7 +96,7 @@ namespace JabberWPF
             RaisePropertyChangedEvent("Messages");
         }
 
-        private void OnMessageTransmitted(string arg1, string arg2)
+        private void OnMessageTransmitted(string sender, string message)
         {
             this._messages = new ObservableCollection<string>(_chatModel.Messages);
             RaisePropertyChangedEvent("Messages");
@@ -137,12 +137,10 @@ namespace JabberWPF
         {
             var recipient = GetMessageRecipient(_messageToSend);
             this.Recipient = recipient.Trim('@');
-            var parsedMessage = _messageToSend.Replace(recipient, "");
+            var messageText = _messageToSend.Replace(recipient, "");
 
-            this._chatModel.SendMessage(this.Recipient, parsedMessage);
-            this.MessageToSend = string.Empty;
-            RaisePropertyChangedEvent("Messages");
-            RaisePropertyChangedEvent("Recipient");
+            _chatModel.SendMessage(this.Recipient, messageText);
+            MessageToSend = string.Empty;
         }
 
         private static string GetMessageRecipient(string message)
