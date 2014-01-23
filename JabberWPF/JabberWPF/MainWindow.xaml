@@ -52,6 +52,6 @@
             <Button Content="Send" Command="{Binding SendMessage}"
                     HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" />
         </WrapPanel>
-        <Label Height="32" Content="{Binding ErrorMessage}"></Label>
+        <Label Height="32" Content="{Binding ErrorMessage}"/>
     </StackPanel>
 </Controls:MetroWindow>
