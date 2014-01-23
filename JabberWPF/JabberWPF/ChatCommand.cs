@@ -3,11 +3,11 @@ using System.Windows.Input;
 
 namespace JabberWPF
 {
-    public class ChatTransmitter : ICommand
+    public class ChatCommand : ICommand
     {
         Action<string> _action;
 
-        public ChatTransmitter(Action<string> action)
+        public ChatCommand(Action<string> action)
         {
             _action = action;
         }

@@ -92,7 +92,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ChatModel.cs" />
-    <Compile Include="ChatTransmitter.cs" />
+    <Compile Include="ChatCommand.cs" />
     <Compile Include="ClientConfig.cs" />
     <Compile Include="ConfigurationWindow.xaml.cs">
       <DependentUpon>ConfigurationWindow.xaml</DependentUpon>

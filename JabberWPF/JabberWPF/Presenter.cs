@@ -83,7 +83,7 @@ namespace JabberWPF
         {
             get
             {
-                return new ChatTransmitter(ConfigureClient);
+                return new ChatCommand(ConfigureClient);
             }
         }
 
@@ -91,7 +91,7 @@ namespace JabberWPF
         {
             get
             {
-                return new ChatTransmitter(s => TransmitMessage());
+                return new ChatCommand(s => TransmitMessage());
             }
         }
 
