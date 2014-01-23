@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Xml.Serialization;
 using jabber.client;
 using MahApps.Metro.Controls;
 
@@ -20,24 +12,50 @@ namespace JabberWPF
     /// </summary>
     public partial class ConfigurationWindow : MetroWindow
     {
-        ClientConfig jabberConfig;
+        private ChatConfig _chatConfig = new ChatConfig();
         JabberClient jabberClient;
 
         public ConfigurationWindow(JabberClient jClient, ClientConfig config)
         {
             InitializeComponent();
+            var chatConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "gibbon.config");
+            if(File.Exists(chatConfigPath))
+            {
+                ReadChatConfig(chatConfigPath);
+            }
+            else
+            {
+                ReadAppConfig(config);
+            }
 
-            jabberConfig = config;
             jabberClient = jClient;
 
-            this.userNameTextbox.Text = this.jabberConfig.Username;
-            this.userPasswordBox.Text = this.jabberConfig.Password;
-            this.serverTextbox.Text = this.jabberConfig.Server;
-            this.serverNameTextbox.Text = this.jabberConfig.ServerName;
+            userNameTextbox.Text = _chatConfig.Username;
+            userPasswordBox.Text = _chatConfig.Password;
+            serverTextbox.Text = _chatConfig.Server;
+            serverNameTextbox.Text = _chatConfig.ServerName;
 
             jabberClient.OnAuthenticate += new bedrock.ObjectHandler(jabberClient_OnAuthenticate);
             jabberClient.OnAuthError += new jabber.protocol.ProtocolHandler(jabberClient_OnAuthError);
             jabberClient.OnError += new bedrock.ExceptionHandler(jabberClient_OnError);
+        }
+
+        private void ReadAppConfig(ClientConfig jabberConfig)
+        {
+            _chatConfig.Username = jabberConfig.Username;
+            _chatConfig.Password = jabberConfig.Password;
+            _chatConfig.Server = jabberConfig.Server;
+            _chatConfig.ServerName = jabberConfig.ServerName;
+        }
+
+        private void ReadChatConfig(string chatConfigPath)
+        {
+            using (var configStream = new StreamReader(chatConfigPath))
+            {
+                var configXml = new XmlSerializer(typeof(ChatConfig));
+                _chatConfig = (ChatConfig)configXml.Deserialize(configStream);
+                configStream.Close();
+            }
         }
 
         void jabberClient_OnError(object sender, Exception ex)
@@ -62,10 +80,10 @@ namespace JabberWPF
 
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
-            this.jabberConfig.Username = this.userNameTextbox.Text;
-            this.jabberConfig.Password = this.userPasswordBox.Text;
-            this.jabberConfig.Server = this.serverTextbox.Text;
-            this.jabberConfig.ServerName = this.serverNameTextbox.Text;
+            _chatConfig.Username = this.userNameTextbox.Text;
+            _chatConfig.Password = this.userPasswordBox.Text;
+            _chatConfig.Server = this.serverTextbox.Text;
+            _chatConfig.ServerName = this.serverNameTextbox.Text;
 
             ApplyJabberUserConfiguration(jabberClient);
 
@@ -74,10 +92,10 @@ namespace JabberWPF
 
         private void ApplyJabberUserConfiguration(JabberClient jabberClient)
         {
-            jabberClient.User = jabberConfig.Username;
-            jabberClient.Password = jabberConfig.Password;
-            jabberClient.NetworkHost = jabberConfig.Server;
-            jabberClient.Server = jabberConfig.ServerName;
+            jabberClient.User = _chatConfig.Username;
+            jabberClient.Password = _chatConfig.Password;
+            jabberClient.NetworkHost = _chatConfig.Server;
+            jabberClient.Server = _chatConfig.ServerName;
         }
     }
 }
