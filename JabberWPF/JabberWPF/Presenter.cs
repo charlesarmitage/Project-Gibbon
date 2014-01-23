@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using System.Linq;
 
@@ -15,12 +17,6 @@ namespace JabberWPF
             Roster = new ObservableCollection<string>();
             Messages = new ObservableCollection<string>();
             MessageToSend = string.Empty;
-
-            for (int i = 0; i < 50; i++)
-            {
-                Roster.Add("Laura");
-                Roster.Add("Philippa");
-            }
 
             _chatModel = new EchoChatModel();
             ConnectToChatModel(_chatModel);
@@ -68,11 +64,9 @@ namespace JabberWPF
         private void OnRosterChanged()
         {
             var newRosterItems = _chatModel.Roster.Except(Roster);
-            foreach (var newRosterItem in newRosterItems)
-            {
-                Roster.Add(newRosterItem);
-            }
+            AddToObservableCollection(Roster, newRosterItems);
         }
+
 
         private void OnMessageReceived(string sender, string message)
         {
@@ -107,10 +101,7 @@ namespace JabberWPF
         private void AddNewMessagesToMessageList(IEnumerable<string> modelMessages)
         {
             var newMessages = modelMessages.Except(Messages);
-            foreach (var newMessage in newMessages)
-            {
-                Messages.Add(newMessage);
-            }
+            AddToObservableCollection(Messages, newMessages);
         }
 
         private void ConfigureClient(string obj)
@@ -138,6 +129,17 @@ namespace JabberWPF
         {
             var words = message.Split();
             return words.FirstOrDefault(word => word.StartsWith("@")) ?? string.Empty;
+        }
+
+        private static void AddToObservableCollection(ObservableCollection<string> observableCollection, IEnumerable<string> newItems)
+        {
+            Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                foreach (var newItem in newItems)
+                {
+                    observableCollection.Add(newItem);
+                }
+            }));
         }
     }
 }

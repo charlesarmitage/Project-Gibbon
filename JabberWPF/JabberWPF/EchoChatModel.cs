@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using jabber.client;
 
 namespace JabberWPF
@@ -15,6 +17,18 @@ namespace JabberWPF
             this.Configuration.ServerName = "echo";
 
             this.Messages = new List<string>();
+            this.Roster = new List<string>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                Roster.Add(string.Format("Laura - {0}", i));
+                Roster.Add(string.Format("Philippa - {0}", i));
+            }
+            ThreadPool.QueueUserWorkItem( c =>
+                                      {
+                                          Thread.Sleep(5000);
+                                          RosterChanged();
+                                      });
         }
 
         public ClientConfig Configuration { get; private set; }
@@ -29,7 +43,7 @@ namespace JabberWPF
         public void SendMessage(string target, string text)
         {
             this.Messages.Add(string.Format("You: {0}", text));
-            this.MessageTransmitted("You", text);
+            ThreadPool.QueueUserWorkItem(c => this.MessageTransmitted("You", text));
         }
     }
 }
