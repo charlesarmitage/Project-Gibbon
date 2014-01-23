@@ -38,8 +38,14 @@
                          HorizontalAlignment="Left" Width="210" Height="240"/>
             </StackPanel>
             
-            <ListBox ItemsSource="{Binding Messages}"
-                     HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="295"/>
+            <ListBox ItemsSource="{Binding Messages}" HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" Width="295">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" TextWrapping="WrapWithOverflow"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </WrapPanel>
         
         <WrapPanel Name="TransmitPanel" VerticalAlignment="Bottom" Height="64">
