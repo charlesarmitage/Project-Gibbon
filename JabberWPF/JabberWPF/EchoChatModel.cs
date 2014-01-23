@@ -26,7 +26,9 @@ namespace JabberWPF
             }
             ThreadPool.QueueUserWorkItem( c =>
                                       {
-                                          Thread.Sleep(5000);
+                                          Thread.Sleep(1000);
+                                          ErrorMessage("An error occurred");
+                                          Thread.Sleep(2000);
                                           RosterChanged();
                                       });
         }
@@ -38,6 +40,7 @@ namespace JabberWPF
         public event Action<string, string> MessageTransmitted;
         public event Action<string, string> MessageReceived;
         public event Action<string> StatusUpdate;
+        public event Action<string> ErrorMessage;
         public event Action RosterChanged;
 
         public void SendMessage(string target, string text)

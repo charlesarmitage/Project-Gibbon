@@ -45,6 +45,8 @@ namespace JabberWPF
 
         public event Action<string> StatusUpdate;
 
+        public event Action<string> ErrorMessage;
+
         public event Action RosterChanged;
 
         public ICollection<string> Roster { get; private set; }
@@ -114,7 +116,7 @@ namespace JabberWPF
         private void jabberClient_OnAuthError(object sender, System.Xml.XmlElement rp)
         {
             var errorMsg = string.Format("Error:{0}", rp.InnerText);
-            OnStatusUpdate(errorMsg);
+            OnErrorMessage(errorMsg);
         }
 
         private void jabberClient_OnAuthenticate(object sender)
@@ -128,13 +130,19 @@ namespace JabberWPF
         private void jabberClient_OnError(object sender, Exception ex)
         {
             var errorMsg = string.Format("Error:{0}", ex.Message);
-            OnStatusUpdate(errorMsg);
+            OnErrorMessage(errorMsg);
         }
 
         protected virtual void OnStatusUpdate(string status)
         {
             var handler = StatusUpdate;
             if (handler != null) handler(status);
+        }
+
+        protected virtual void OnErrorMessage(string errorMsg)
+        {
+            var handler = ErrorMessage;
+            if (handler != null) handler(errorMsg);
         }
 
         private void rosterManager_OnRosterItem(object sender, Item ri)

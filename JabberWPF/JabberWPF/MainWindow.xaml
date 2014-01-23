@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:Jabber="clr-namespace:JabberWPF"
-        Title="Gibbon" Height="446" Width="525" ShowIconOnTitleBar="True">
+        Title="Gibbon" Height="478" Width="525" ShowIconOnTitleBar="True">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -42,7 +42,7 @@
                      HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="295"/>
         </WrapPanel>
         
-        <WrapPanel Name="TransmitPanel" VerticalAlignment="Bottom" Height="70">
+        <WrapPanel Name="TransmitPanel" VerticalAlignment="Bottom" Height="64">
             <TextBox Text="{Binding Recipient}"
                      Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76"
                      Controls:TextboxHelper.Watermark="To..."/>
@@ -52,5 +52,6 @@
             <Button Content="Send" Command="{Binding SendMessage}"
                     HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" />
         </WrapPanel>
+        <Label Height="32" Content="{Binding ErrorMessage}"></Label>
     </StackPanel>
 </Controls:MetroWindow>

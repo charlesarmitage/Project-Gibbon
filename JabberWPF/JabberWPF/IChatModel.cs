@@ -13,6 +13,7 @@ namespace JabberWPF
         event Action<string, string> MessageTransmitted;
         event Action<string, string> MessageReceived;
         event Action<string> StatusUpdate;
+        event Action<string> ErrorMessage;
         event Action RosterChanged;
         void SendMessage(string target, string text);
     }

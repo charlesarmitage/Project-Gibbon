@@ -24,13 +24,16 @@ namespace JabberWPF
 
         private void ConnectToChatModel(IChatModel chatModel)
         {
-            chatModel.StatusUpdate += this.OnStatusUpdate;
-            chatModel.RosterChanged += this.OnRosterChanged;
-            chatModel.MessageReceived += this.OnMessageReceived;
-            chatModel.MessageTransmitted += this.OnMessageTransmitted;
+            chatModel.StatusUpdate += OnStatusUpdate;
+            chatModel.ErrorMessage += OnErrorMessage;
+            chatModel.RosterChanged += OnRosterChanged;
+            chatModel.MessageReceived += OnMessageReceived;
+            chatModel.MessageTransmitted += OnMessageTransmitted;
         }
 
         public string Status { get; set; }
+
+        public string ErrorMessage { get; set; }
 
         public ObservableCollection<string> Roster { get; private set; }
 
@@ -61,12 +64,17 @@ namespace JabberWPF
             Status = status;
         }
 
+        private void OnErrorMessage(string errorMessage)
+        {
+            ErrorMessage = errorMessage;
+            RaisePropertyChangedEvent("ErrorMessage");
+        }
+
         private void OnRosterChanged()
         {
             var newRosterItems = _chatModel.Roster.Except(Roster);
             AddToObservableCollection(Roster, newRosterItems);
         }
-
 
         private void OnMessageReceived(string sender, string message)
         {
