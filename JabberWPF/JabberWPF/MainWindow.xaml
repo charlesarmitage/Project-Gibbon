@@ -39,7 +39,7 @@
             </StackPanel>
             
             <ListBox ItemsSource="{Binding Messages}" HorizontalAlignment="Right" VerticalAlignment="Stretch"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" Width="295">
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" Width="295" MaxHeight="300">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" TextWrapping="WrapWithOverflow"/>
