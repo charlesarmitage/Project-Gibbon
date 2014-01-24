@@ -18,16 +18,7 @@ namespace JabberWPF
             InitializeComponent();
             this.presenter = (Presenter)DataContext;
             this.MessageToSendTextbox.TextChanged += MessageToSendTextboxOnTextChanged;
-            this.MessageToSendTextbox.KeyDown += MessageToSendTextboxOnKeyDown;
 
-        }
-
-        private void MessageToSendTextboxOnKeyDown(object sender, KeyEventArgs keyEventArgs)
-        {
-            if(this.presenter != null)
-            {
-                this.presenter.SendMessageKeyPressed(keyEventArgs.Key);
-            }
         }
 
         private void MessageToSendTextboxOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)

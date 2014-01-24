@@ -95,6 +95,22 @@ namespace JabberWPF
             }
         }
 
+        public ICommand SendMessageCommand
+        {
+            get { return new DelegateCommand(o => TransmitMessage()); }
+        }
+
+        public ICommand ClearSendMessageBox
+        {
+            get { return new DelegateCommand(o => MessageToSend = string.Empty); }
+        }
+
+        public void UpdateSendMessageText(string text)
+        {
+            var recipient = GetMessageRecipient(text);
+            Recipient = recipient.Trim('@');
+        }
+
         private void OnStatusUpdate(string status)
         {
             Status = status;
@@ -120,25 +136,6 @@ namespace JabberWPF
         private void OnMessageTransmitted(string sender, string message)
         {
             AddNewMessagesToMessageList(_chatModel.Messages);
-        }
-
-        public void UpdateSendMessageText(string text)
-        {
-            var recipient = GetMessageRecipient(text);
-            Recipient = recipient.Trim('@');
-        }
-
-        public void SendMessageKeyPressed(Key key)
-        {
-            switch (key)
-            {
-                case Key.Enter:
-                    TransmitMessage();
-                    break;
-                case Key.Escape:
-                    MessageToSend = string.Empty;
-                    break;
-            }
         }
 
         private void AddNewMessagesToMessageList(IEnumerable<string> modelMessages)

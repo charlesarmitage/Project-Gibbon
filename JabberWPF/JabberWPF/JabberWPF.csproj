@@ -98,6 +98,7 @@
     <Compile Include="ConfigurationWindow.xaml.cs">
       <DependentUpon>ConfigurationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="EchoChatModel.cs" />
     <Compile Include="IChatModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
