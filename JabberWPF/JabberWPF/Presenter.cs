@@ -75,6 +75,7 @@ namespace JabberWPF
             set 
             {
                 _messageToSend = value;
+                UpdateSendMessageText(_messageToSend);
                 RaisePropertyChangedEvent("MessageToSend");
             }
         }

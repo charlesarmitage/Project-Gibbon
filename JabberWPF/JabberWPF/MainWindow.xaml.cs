@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows;
 using MahApps.Metro.Controls;
 
 namespace JabberWPF
@@ -17,16 +14,6 @@ namespace JabberWPF
         {
             InitializeComponent();
             this.presenter = (Presenter)DataContext;
-            this.MessageToSendTextbox.TextChanged += MessageToSendTextboxOnTextChanged;
-
-        }
-
-        private void MessageToSendTextboxOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
-        {
-            if(this.presenter != null)
-            {
-                this.presenter.UpdateSendMessageText(this.MessageToSendTextbox.Text);
-            }
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
